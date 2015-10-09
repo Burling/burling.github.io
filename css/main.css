@@ -98,8 +98,7 @@ pre,
 code {
   font: 13px Consolas, "Liberation Mono", Menlo, Courier, monospace;
   border: 1px solid #e8e8e8;
-  border-radius: 3px;
-  background-color: #eef; }
+  border-radius: 3px; }
 
 code {
   padding: 1px 5px;
@@ -432,8 +431,10 @@ pre {
     color: #998;
     min-width: 50px;
     padding: 0 10px 0 0;
-    border-right: 1px solid #ddd;
-    line-height: 0.8; }
+    border-right: 1px solid #ddd; }
+    @media screen and (max-width: 600px) {
+      .highlight .lineno {
+        border-right-width: 0; } }
   .highlight .c {
     color: #999988;
     font-style: italic; }
