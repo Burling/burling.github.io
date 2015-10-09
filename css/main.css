@@ -19,7 +19,8 @@ body {
   background-color: #fdfdfd;
   -webkit-text-size-adjust: 100%;
   word-wrap: break-word;
-  word-break: break-word; }
+  word-break: break-all;
+  overflow-x: hidden; }
 
 /**
  * Set `margin-bottom` to maintain vertical rhythm
@@ -101,7 +102,8 @@ code {
   background-color: #eef; }
 
 code {
-  padding: 1px 5px; }
+  padding: 1px 5px;
+  white-space: pre-wrap; }
 
 pre {
   background-color: #00000000;
