@@ -103,6 +103,10 @@ code {
 code {
   padding: 1px 5px;
   white-space: pre-wrap; }
+  @media screen and (max-width: 600px) {
+    code {
+      padding: 0 5px;
+      line-height: 1.5; } }
 
 pre {
   background-color: #00000000;
