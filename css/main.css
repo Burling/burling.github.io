@@ -19,7 +19,7 @@ body {
   background-color: #fdfdfd;
   -webkit-text-size-adjust: 100%;
   word-wrap: break-word;
-  word-break: normal; }
+  word-break: break-word; }
 
 /**
  * Set `margin-bottom` to maintain vertical rhythm
