@@ -94,8 +94,7 @@ blockquote {
  */
 pre,
 code {
-  font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  font-size: 15px;
+  font: 13px Consolas, "Liberation Mono", Menlo, Courier, monospace;
   border: 1px solid #e8e8e8;
   border-radius: 3px;
   background-color: #eef; }
@@ -104,8 +103,7 @@ code {
   padding: 1px 5px; }
 
 pre {
-  padding: 8px 12px;
-  overflow-x: scroll; }
+  padding: 8px 12px; }
   pre > code {
     border: 0;
     padding-right: 0;
@@ -425,6 +423,12 @@ pre {
   /* Name.Variable.Global */
   /* Name.Variable.Instance */
   /* Literal.Number.Integer.Long */ }
+  .highlight .lineno {
+    color: #998;
+    min-width: 50px;
+    padding: 0 10px 0 0;
+    border-right: 1px dotted #ddd;
+    line-height: 0.8; }
   .highlight .c {
     color: #999988;
     font-style: italic; }
@@ -432,21 +436,21 @@ pre {
     color: #a61717;
     background-color: #e3d2d2; }
   .highlight .k {
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .o {
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .cm {
     color: #999988;
     font-style: italic; }
   .highlight .cp {
     color: #999999;
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .c1 {
     color: #999988;
     font-style: italic; }
   .highlight .cs {
     color: #999999;
-    font-weight: bold;
+    /*font-weight: bold*/
     font-style: italic; }
   .highlight .gd {
     color: #000000;
@@ -471,22 +475,22 @@ pre {
   .highlight .gp {
     color: #555555; }
   .highlight .gs {
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .gu {
     color: #aaaaaa; }
   .highlight .gt {
     color: #aa0000; }
   .highlight .kc {
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .kd {
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .kp {
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .kr {
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .kt {
     color: #445588;
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .m {
     color: #009999; }
   .highlight .s {
@@ -497,17 +501,17 @@ pre {
     color: #0086B3; }
   .highlight .nc {
     color: #445588;
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .no {
     color: #008080; }
   .highlight .ni {
     color: #800080; }
   .highlight .ne {
     color: #990000;
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .nf {
     color: #990000;
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .nn {
     color: #555555; }
   .highlight .nt {
@@ -515,7 +519,7 @@ pre {
   .highlight .nv {
     color: #008080; }
   .highlight .ow {
-    font-weight: bold; }
+    /*font-weight: bold*/ }
   .highlight .w {
     color: #bbbbbb; }
   .highlight .mf {
