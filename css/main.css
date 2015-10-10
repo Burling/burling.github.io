@@ -130,7 +130,7 @@ pre {
   padding: 0 15px;
   margin-right: auto;
   margin-left: auto; }
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 960px) {
     .wrapper {
       max-width: -webkit-calc(960px - 30px);
       max-width: calc(960px - 30px); } }
@@ -187,6 +187,9 @@ pre {
   text-decoration: none; }
   .site-title:hover {
     text-decoration: underline; }
+  @media screen and (max-width: 600px) {
+    .site-title {
+      font-size: 30px; } }
 
 .site-nav {
   float: right;
@@ -269,7 +272,7 @@ pre {
   width: -webkit-calc(45% - (30px / 2));
   width: calc(45% - (30px / 2)); }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 960px) {
   .footer-col-1,
   .footer-col-2 {
     width: -webkit-calc(50% - (30px / 2));
@@ -289,13 +292,16 @@ pre {
 .page-content {
   width: 700px;
   float: left; }
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 960px) {
     .page-content {
       width: 100%;
       max-width: 100%; } }
 
 .home {
   padding: 30px 15px 30px 0; }
+  @media screen and (max-width: 960px) {
+    .home {
+      padding: 30px 0; } }
 
 .page-heading {
   font-size: 22px; }
@@ -331,13 +337,13 @@ pre {
 .page-right-bar {
   width: 260px;
   float: left; }
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 960px) {
     .page-right-bar {
       width: 100%;
       max-width: 100%; } }
   .page-right-bar .widget {
     margin: 30px 0 30px 15px; }
-    @media screen and (max-width: 800px) {
+    @media screen and (max-width: 960px) {
       .page-right-bar .widget {
         margin: 30px 0; } }
     .page-right-bar .widget .widget-title {
@@ -371,7 +377,7 @@ pre {
   font-size: 24px;
   letter-spacing: -1px;
   line-height: 1; }
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 960px) {
     .post-title {
       font-size: 22px; } }
 
@@ -379,22 +385,22 @@ pre {
   margin-bottom: 30px; }
   .post-content h1 {
     font-size: 22px; }
-    @media screen and (max-width: 800px) {
+    @media screen and (max-width: 960px) {
       .post-content h1 {
         font-size: 20px; } }
   .post-content h2 {
     font-size: 20px; }
-    @media screen and (max-width: 800px) {
+    @media screen and (max-width: 960px) {
       .post-content h2 {
         font-size: 18px; } }
   .post-content h3 {
     font-size: 18px; }
-    @media screen and (max-width: 800px) {
+    @media screen and (max-width: 960px) {
       .post-content h3 {
         font-size: 16px; } }
   .post-content h4 {
     font-size: 16px; }
-    @media screen and (max-width: 800px) {
+    @media screen and (max-width: 960px) {
       .post-content h4 {
         font-size: 14px; } }
 
