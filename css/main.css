@@ -14,7 +14,7 @@ dl, dd, ol, ul, figure {
 body {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
-  line-height: 1.2;
+  line-height: 1.8;
   font-weight: 300;
   color: #111;
   background-color: #fdfdfd;
@@ -196,7 +196,7 @@ pre {
     display: none; }
   .site-nav .page-link {
     color: #111;
-    line-height: 1.2; }
+    line-height: 1.8; }
     .site-nav .page-link:not(:first-child) {
       margin-left: 20px; }
   @media screen and (max-width: 600px) {
