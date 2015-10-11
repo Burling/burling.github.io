@@ -4,7 +4,7 @@
   <title>Burling&#39;s Blog</title>
   <link href="http://blog.burling.wang"/>
   <link type="application/atom+xml" rel="self" href="http://blog.burling.wang/atom.xml"/>
-  <updated>2015-10-10T15:53:48+00:00</updated>
+  <updated>2015-10-11T06:42:33+00:00</updated>
   <id>http://blog.burling.wang</id>
   <author>
     <name>Burling</name>
@@ -15,7 +15,7 @@
   <entry>
     <id>http://blog.burling.wang/2015-10/welcome-to-my-blog</id>
     <link type="text/html" rel="alternate" href="http://blog.burling.wang/2015-10/welcome-to-my-blog.html"/>
-    <title>欢迎来到Burling的博客！</title>
+    <title>写在开始的话</title>
     <published>2015-10-10T19:00:01+00:00</published>
     <updated>2015-10-10T19:00:01+00:00</updated>
     <author>
