@@ -4,132 +4,13 @@
   <title>Burling&#39;s Blog</title>
   <link href="http://blog.burling.wang"/>
   <link type="application/atom+xml" rel="self" href="http://blog.burling.wang/atom.xml"/>
-  <updated>2015-12-04T09:36:05+00:00</updated>
+  <updated>2015-12-04T10:17:04+00:00</updated>
   <id>http://blog.burling.wang</id>
   <author>
     <name>Burling</name>
     <email>wangbaolin1990@gmail.com</email>
   </author>
 
-  
-  <entry>
-    <id>http://blog.burling.wang/2015-12/readme-of-labeled-faces-in-the-wild-face-database</id>
-    <link type="text/html" rel="alternate" href="http://blog.burling.wang/2015-12/readme-of-labeled-faces-in-the-wild-face-database.html"/>
-    <title>LFW人脸数据库使用规范</title>
-    <published>2015-12-04T15:32:01+00:00</published>
-    <updated>2015-12-04T15:32:01+00:00</updated>
-    <author>
-      <name> Burling </name>
-      <uri>http://blog.burling.wang</uri>
-    </author>
-    <content type="html">&lt;p&gt;&lt;img src=&quot;/images/posts/labeled-faces-in-the-wild-cover.jpg&quot; alt=&quot;Labeled Faces in the Wild&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;本文翻译自：&lt;a href=&quot;http://vis-www.cs.umass.edu/lfw/README.txt&quot;&gt;http://vis-www.cs.umass.edu/lfw/README.txt&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;翻译不当之处，欢迎指正！&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;lfwtgz---&quot;&gt;1. lfw.tgz - 人脸数据库文件&lt;/h2&gt;
-&lt;p&gt;所有的LFW数据库可以以&lt;code&gt;gzipped tar&lt;/code&gt;文件格式下载，解压后，所有的人脸数据都在&lt;code&gt;lfw&lt;/code&gt;目录中。&lt;/p&gt;
-
-&lt;p&gt;所有的图像都以&lt;code&gt;lfw/name/name_xxxx.jpg&lt;/code&gt;的命名规范保存，其中&lt;code&gt;xxxx&lt;/code&gt;是一串前置零的四位数字，用以标志图像序号。比如：&lt;code&gt;lfw/George_W_Bush/George_W_Bush_0010.jpg&lt;/code&gt;表示&lt;code&gt;George_W_Bush&lt;/code&gt;的第10张图片。&lt;/p&gt;
-
-&lt;p&gt;数据库总共有13233张图片，包含了5749个人。&lt;/p&gt;
-
-&lt;p&gt;图片大小均为250x250，并以.jpg格式保存。图像是通过&lt;code&gt;OpenCV&lt;/code&gt;的应用&lt;code&gt;Viola-Jones人脸检测器&lt;/code&gt;检测和居中的。为了得到更多头部信息并且得到统一的大小，剪裁区域是由检测器以2.2的系数自动放大裁剪得到。&lt;/p&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;2. 训练规范&lt;/h2&gt;
-&lt;p&gt;这里给出了训练集的两种可能形式&lt;/p&gt;
-
-&lt;h3 id=&quot;a-&quot;&gt;2a. 图像受限的配置&lt;/h3&gt;
-&lt;p&gt;第一种模式中，训练信息被限制在以&lt;a href=&quot;http://vis-www.cs.umass.edu/lfw/pairs.txt&quot;&gt;pairs.txt&lt;/a&gt;文件给出的图像对中。每个图像对应的人物姓名信息是不允许使用的。这样做是为了测试算法的推导能力。&lt;/p&gt;
-
-&lt;p&gt;也就是说，如果一个匹配对包含了&lt;code&gt;George_W_Bush&lt;/code&gt;的第10张和第12张图片，另一个匹配对包含了&lt;code&gt;George_W_Bush&lt;/code&gt;的第42张和第50张图片，那么在这种模式下，测试者不能因为这两个匹配对都包含了&lt;code&gt;George_W_bush&lt;/code&gt;的图像就使用第10张和第42张去组成一个新的匹配对提供给算法。&lt;/p&gt;
-
-&lt;p&gt;为了确保这个规则被严格执行，测试者只允许使用图像的名字信息来指定图像，而不能把图像的名字信息提供给算法。因此，我们将这一模式称为图像受限的配置。在这一模式下，算法只需&lt;a href=&quot;http://vis-www.cs.umass.edu/lfw/pairs.txt&quot;&gt;pairs.txt&lt;/a&gt;这一文件就够了。&lt;/p&gt;
-
-&lt;h3 id=&quot;b-&quot;&gt;2b. 非受限的配置&lt;/h3&gt;
-&lt;p&gt;第二种模式中，训练信息提供了人物的姓名和相关的图片。通过这些信息，测试者可以自己组织尽可能多的匹配对和非匹配对。&lt;/p&gt;
-
-&lt;p&gt;比如说，如果&lt;code&gt;George_W_Bus&lt;/code&gt;h和&lt;code&gt;John_Kerry&lt;/code&gt;都同时存在于一个训练集中，那么&lt;code&gt;George_W_Bush&lt;/code&gt;的的任何两张图片都可以组成一个匹配对，而&lt;code&gt;George_W_Bush&lt;/code&gt;的任何一张图片和&lt;code&gt;John_Kerry&lt;/code&gt;的任何一张图片则可以组成一个非匹配对。&lt;/p&gt;
-
-&lt;p&gt;我们称这种模式为非受限的配置，&lt;a href=&quot;http://vis-www.cs.umass.edu/lfw/people.txt&quot;&gt;people.txt&lt;/a&gt;中就包含了每个训练集中的人物姓名。&lt;/p&gt;
-
-&lt;h3 id=&quot;c-&quot;&gt;2c. 测试过程&lt;/h3&gt;
-&lt;p&gt;以上两种配置的测试过程是一样的，训练集由10个数据集中的9个数据集组成，剩下的数据集则是测试集。测试算法必须从&lt;a href=&quot;http://vis-www.cs.umass.edu/lfw/pairs.txt&quot;&gt;pairs.txt&lt;/a&gt;中给出的测试集中进行识别。也就是说，算法的识别应该是一个关于单对图像的函数，而不能影响其他的测试对。&lt;/p&gt;
-
-&lt;p&gt;因此，&lt;a href=&quot;http://vis-www.cs.umass.edu/lfw/pairs.txt&quot;&gt;pairs.txt&lt;/a&gt;文件即使在非受限的配置下也是必需的文件（用于计算测试的性能）。在非受限配置下，测试者可以从不同的数据集中组合得到非匹配对作为训练数据。&lt;/p&gt;
-
-&lt;h2 id=&quot;section-1&quot;&gt;3. 训练、验证和测试&lt;/h2&gt;
-&lt;p&gt;LFW的数据被分成了两种视图。视图1用于供算法研发和正常的实验的正式评估之前使用，例如模型选择和验证。视图2是用于出具性能报告，且只能用在算法的最后评估时来最小化“拟合测试数据”。&lt;/p&gt;
-
-&lt;h3 id=&quot;a-1&quot;&gt;3a. 视图1：训练、测试集&lt;/h3&gt;
-&lt;p&gt;我们提供了两种配置的开发数据集（图像受限和非受限的）。第一种配置包含&lt;a href=&quot;http://vis-www.cs.umass.edu/lfw/pairsDevTrain.txt&quot;&gt;pairsDevTraining.txt&lt;/a&gt;和&lt;a href=&quot;http://vis-www.cs.umass.edu/lfw/pairsDevTest.txt&quot;&gt;pairsDevTest.txt&lt;/a&gt;。这两个文件的格式是：第一行给出了匹配对数量N（等于非匹配对的数量），后面包含了N行匹配对和N行非匹配对，格式与性能报告数据集的格式相同。&lt;/p&gt;
-
-&lt;p&gt;第二个配置包含了&lt;a href=&quot;http://vis-www.cs.umass.edu/lfw/peopleDevTrain.txt&quot;&gt;peopleDevTraining.txt&lt;/a&gt;和&lt;a href=&quot;http://vis-www.cs.umass.edu/lfw/peopleDevTest.txt&quot;&gt;peopleDevTest.txt&lt;/a&gt;。这两个文件的格式：第一行给出了数据集中的人数N，后面包含了N行的数据，每一行的数据包含了该人物的姓名和图片数量，格式与性能报告一致。&lt;/p&gt;
-
-&lt;h3 id=&quot;b-2&quot;&gt;3b. 视图2：&lt;/h3&gt;
-&lt;p&gt;我们随机将数据库分为10个数据集（每个人都是随机的），然后在每个数据集中随机选择了300个匹配对和300个非匹配对。这些信息都保存在&lt;a href=&quot;http://vis-www.cs.umass.edu/lfw/pairs.txt&quot;&gt;pairs.txt&lt;/a&gt;中，因此，算法的性能也能通过这10个数据集的交叉验证大致得出。&lt;/p&gt;
-
-&lt;h3 id=&quot;c-pairstxt&quot;&gt;3c. pairs.txt的格式&lt;/h3&gt;
-&lt;p&gt;pairs.txt的格式如下：首行给出了数据集的数量和每个数据集匹配对的数量（也就是每个数据集非匹配对的数量）。剩下的300行就是匹配对，格式为：&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code&gt;name	n1	n2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;表示匹配对包含了&lt;code&gt;name&lt;/code&gt;的第n1个图像和第n2个图像。例如：&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code&gt;George_W_Bush 	10	24
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;表示这个匹配对包含&lt;code&gt;George_W_Bush_0010.jpg&lt;/code&gt;和&lt;code&gt;George_W_Bush_0024.jpg&lt;/code&gt;这两张图片。&lt;/p&gt;
-
-&lt;p&gt;后续300行表示非匹配对的信息，格式如下：&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code&gt;name1	n1	name2 n2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;表示该非匹配对包含了名为&lt;code&gt;name1&lt;/code&gt;的第n1张图片和名为&lt;code&gt;name2&lt;/code&gt;的第n2张图片，例如：&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code&gt;George_W_Bush 	12	John_Kerry	8
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;就表示该非匹配对包含了&lt;code&gt;George_W_Bush_0012.jpg&lt;/code&gt;和&lt;code&gt;John_Kerry_0008.jpg&lt;/code&gt;两张图片。&lt;/p&gt;
-
-&lt;p&gt;上述过程再重复9次就可以获得其余9个数据集的数据对。&lt;/p&gt;
-
-&lt;h3 id=&quot;d-peopletxt&quot;&gt;3d. people.txt的格式&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;http://vis-www.cs.umass.edu/lfw/people.txt&quot;&gt;people.txt&lt;/a&gt;的格式如下：首行给出了数据集的数量，第二行给出了第一个数据集的人数N，那么后续的N行就是第一个数据集的人和对应的图片数量，每人一行。比如，如果&lt;code&gt;George_W_Bush&lt;/code&gt;在首行，那么这一行就应该是&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code&gt;George_W_Bush	530
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;下一节的第一行就给出了第二个数据集的人数，格式同第一节。重复该过程10次就能获取一个数据集的信息。&lt;/p&gt;
-
-&lt;h2 id=&quot;section-2&quot;&gt;4. 其他细节&lt;/h2&gt;
-&lt;p&gt;其他关于该数据库是如何构建的、配置是如何选择用来做性能报告的，请参考我们的技术报告：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Gary B. Huang, Manu Ramesh, Tamara Berg, and Erik Learned-Miller.&lt;/p&gt;
-
-  &lt;p&gt;Labeled Faces in the Wild: A Database for Studying Face Recognition in Unconstrained Environments.&lt;/p&gt;
-
-  &lt;p&gt;University of Massachusetts, Amherst, Technical Report 07-49, October, 2007.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;关于已经更新了的LFW结果的细节，包括信息相关的非监督方法和使用外部训练数据的方法，请参考我们的补充技术报告：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Gary B. Huang and Erik Learned-Miller.&lt;/p&gt;
-
-  &lt;p&gt;Labeled Faces in the Wild: Updates and New Reporting Procedures.&lt;/p&gt;
-
-  &lt;p&gt;UMass Amherst Technical Report UM-CS-2014-003, 2014.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-</content>
-  </entry>
   
   <entry>
     <id>http://blog.burling.wang/2015-10/welcome-to-my-blog</id>

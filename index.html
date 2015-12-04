@@ -69,134 +69,6 @@
       <li>
         <div class="post-list-header">
           <h2 class="post-link">
-            <a href="/2015-12/readme-of-labeled-faces-in-the-wild-face-database.html">LFW人脸数据库使用规范</a>
-          </h2>
-
-          <div class="post-meta">
-            By  Burling 
-            at Dec 4, 2015 15:32 
-            | <a class="post-comments" href="/2015-12/readme-of-labeled-faces-in-the-wild-face-database.html#SOHUCS">Comments(<span id = "sourceId::http://blog.burling.wang/2015-12/readme-of-labeled-faces-in-the-wild-face-database" class = "cy_cmt_count" ></span>)</a>
-
-          </div>
-        </div>
-
-        <div class="post-list-content">
-          <div class="post-content"><p><img src="/images/posts/labeled-faces-in-the-wild-cover.jpg" alt="Labeled Faces in the Wild" /></p>
-
-<blockquote>
-  <p>本文翻译自：<a href="http://vis-www.cs.umass.edu/lfw/README.txt">http://vis-www.cs.umass.edu/lfw/README.txt</a></p>
-
-  <p>翻译不当之处，欢迎指正！</p>
-</blockquote>
-
-<h2 id="lfwtgz---">1. lfw.tgz - 人脸数据库文件</h2>
-<p>所有的LFW数据库可以以<code>gzipped tar</code>文件格式下载，解压后，所有的人脸数据都在<code>lfw</code>目录中。</p>
-
-<p>所有的图像都以<code>lfw/name/name_xxxx.jpg</code>的命名规范保存，其中<code>xxxx</code>是一串前置零的四位数字，用以标志图像序号。比如：<code>lfw/George_W_Bush/George_W_Bush_0010.jpg</code>表示<code>George_W_Bush</code>的第10张图片。</p>
-
-<p>数据库总共有13233张图片，包含了5749个人。</p>
-
-<p>图片大小均为250x250，并以.jpg格式保存。图像是通过<code>OpenCV</code>的应用<code>Viola-Jones人脸检测器</code>检测和居中的。为了得到更多头部信息并且得到统一的大小，剪裁区域是由检测器以2.2的系数自动放大裁剪得到。</p>
-
-<h2 id="section">2. 训练规范</h2>
-<p>这里给出了训练集的两种可能形式</p>
-
-<h3 id="a-">2a. 图像受限的配置</h3>
-<p>第一种模式中，训练信息被限制在以<a href="http://vis-www.cs.umass.edu/lfw/pairs.txt">pairs.txt</a>文件给出的图像对中。每个图像对应的人物姓名信息是不允许使用的。这样做是为了测试算法的推导能力。</p>
-
-<p>也就是说，如果一个匹配对包含了<code>George_W_Bush</code>的第10张和第12张图片，另一个匹配对包含了<code>George_W_Bush</code>的第42张和第50张图片，那么在这种模式下，测试者不能因为这两个匹配对都包含了<code>George_W_bush</code>的图像就使用第10张和第42张去组成一个新的匹配对提供给算法。</p>
-
-<p>为了确保这个规则被严格执行，测试者只允许使用图像的名字信息来指定图像，而不能把图像的名字信息提供给算法。因此，我们将这一模式称为图像受限的配置。在这一模式下，算法只需<a href="http://vis-www.cs.umass.edu/lfw/pairs.txt">pairs.txt</a>这一文件就够了。</p>
-
-<h3 id="b-">2b. 非受限的配置</h3>
-<p>第二种模式中，训练信息提供了人物的姓名和相关的图片。通过这些信息，测试者可以自己组织尽可能多的匹配对和非匹配对。</p>
-
-<p>比如说，如果<code>George_W_Bus</code>h和<code>John_Kerry</code>都同时存在于一个训练集中，那么<code>George_W_Bush</code>的的任何两张图片都可以组成一个匹配对，而<code>George_W_Bush</code>的任何一张图片和<code>John_Kerry</code>的任何一张图片则可以组成一个非匹配对。</p>
-
-<p>我们称这种模式为非受限的配置，<a href="http://vis-www.cs.umass.edu/lfw/people.txt">people.txt</a>中就包含了每个训练集中的人物姓名。</p>
-
-<h3 id="c-">2c. 测试过程</h3>
-<p>以上两种配置的测试过程是一样的，训练集由10个数据集中的9个数据集组成，剩下的数据集则是测试集。测试算法必须从<a href="http://vis-www.cs.umass.edu/lfw/pairs.txt">pairs.txt</a>中给出的测试集中进行识别。也就是说，算法的识别应该是一个关于单对图像的函数，而不能影响其他的测试对。</p>
-
-<p>因此，<a href="http://vis-www.cs.umass.edu/lfw/pairs.txt">pairs.txt</a>文件即使在非受限的配置下也是必需的文件（用于计算测试的性能）。在非受限配置下，测试者可以从不同的数据集中组合得到非匹配对作为训练数据。</p>
-
-<h2 id="section-1">3. 训练、验证和测试</h2>
-<p>LFW的数据被分成了两种视图。视图1用于供算法研发和正常的实验的正式评估之前使用，例如模型选择和验证。视图2是用于出具性能报告，且只能用在算法的最后评估时来最小化“拟合测试数据”。</p>
-
-<h3 id="a-1">3a. 视图1：训练、测试集</h3>
-<p>我们提供了两种配置的开发数据集（图像受限和非受限的）。第一种配置包含<a href="http://vis-www.cs.umass.edu/lfw/pairsDevTrain.txt">pairsDevTraining.txt</a>和<a href="http://vis-www.cs.umass.edu/lfw/pairsDevTest.txt">pairsDevTest.txt</a>。这两个文件的格式是：第一行给出了匹配对数量N（等于非匹配对的数量），后面包含了N行匹配对和N行非匹配对，格式与性能报告数据集的格式相同。</p>
-
-<p>第二个配置包含了<a href="http://vis-www.cs.umass.edu/lfw/peopleDevTrain.txt">peopleDevTraining.txt</a>和<a href="http://vis-www.cs.umass.edu/lfw/peopleDevTest.txt">peopleDevTest.txt</a>。这两个文件的格式：第一行给出了数据集中的人数N，后面包含了N行的数据，每一行的数据包含了该人物的姓名和图片数量，格式与性能报告一致。</p>
-
-<h3 id="b-2">3b. 视图2：</h3>
-<p>我们随机将数据库分为10个数据集（每个人都是随机的），然后在每个数据集中随机选择了300个匹配对和300个非匹配对。这些信息都保存在<a href="http://vis-www.cs.umass.edu/lfw/pairs.txt">pairs.txt</a>中，因此，算法的性能也能通过这10个数据集的交叉验证大致得出。</p>
-
-<h3 id="c-pairstxt">3c. pairs.txt的格式</h3>
-<p>pairs.txt的格式如下：首行给出了数据集的数量和每个数据集匹配对的数量（也就是每个数据集非匹配对的数量）。剩下的300行就是匹配对，格式为：</p>
-
-<div class="highlight"><pre><code>name	n1	n2
-</code></pre></div>
-
-<p>表示匹配对包含了<code>name</code>的第n1个图像和第n2个图像。例如：</p>
-
-<div class="highlight"><pre><code>George_W_Bush 	10	24
-</code></pre></div>
-
-<p>表示这个匹配对包含<code>George_W_Bush_0010.jpg</code>和<code>George_W_Bush_0024.jpg</code>这两张图片。</p>
-
-<p>后续300行表示非匹配对的信息，格式如下：</p>
-
-<div class="highlight"><pre><code>name1	n1	name2 n2
-</code></pre></div>
-
-<p>表示该非匹配对包含了名为<code>name1</code>的第n1张图片和名为<code>name2</code>的第n2张图片，例如：</p>
-
-<div class="highlight"><pre><code>George_W_Bush 	12	John_Kerry	8
-</code></pre></div>
-
-<p>就表示该非匹配对包含了<code>George_W_Bush_0012.jpg</code>和<code>John_Kerry_0008.jpg</code>两张图片。</p>
-
-<p>上述过程再重复9次就可以获得其余9个数据集的数据对。</p>
-
-<h3 id="d-peopletxt">3d. people.txt的格式</h3>
-<p><a href="http://vis-www.cs.umass.edu/lfw/people.txt">people.txt</a>的格式如下：首行给出了数据集的数量，第二行给出了第一个数据集的人数N，那么后续的N行就是第一个数据集的人和对应的图片数量，每人一行。比如，如果<code>George_W_Bush</code>在首行，那么这一行就应该是</p>
-
-<div class="highlight"><pre><code>George_W_Bush	530
-</code></pre></div>
-
-<p>下一节的第一行就给出了第二个数据集的人数，格式同第一节。重复该过程10次就能获取一个数据集的信息。</p>
-
-<h2 id="section-2">4. 其他细节</h2>
-<p>其他关于该数据库是如何构建的、配置是如何选择用来做性能报告的，请参考我们的技术报告：</p>
-
-<blockquote>
-  <p>Gary B. Huang, Manu Ramesh, Tamara Berg, and Erik Learned-Miller.</p>
-
-  <p>Labeled Faces in the Wild: A Database for Studying Face Recognition in Unconstrained Environments.</p>
-
-  <p>University of Massachusetts, Amherst, Technical Report 07-49, October, 2007.</p>
-</blockquote>
-
-<p>关于已经更新了的LFW结果的细节，包括信息相关的非监督方法和使用外部训练数据的方法，请参考我们的补充技术报告：</p>
-
-<blockquote>
-  <p>Gary B. Huang and Erik Learned-Miller.</p>
-
-  <p>Labeled Faces in the Wild: Updates and New Reporting Procedures.</p>
-
-  <p>UMass Amherst Technical Report UM-CS-2014-003, 2014.</p>
-</blockquote>
-
-</div>
-        </div>
-
-        <div class="post-list-footer"></div>
-
-      </li>
-    
-      <li>
-        <div class="post-list-header">
-          <h2 class="post-link">
             <a href="/2015-10/welcome-to-my-blog.html">写在开始的话</a>
           </h2>
 
@@ -256,18 +128,12 @@
 		<div class="widget-content">
 			<span><a class="tag" href="/tags/"><b>all tags</b></a></span>
 		
-			
-
-			<span><a class="tag" href="/tags/#人脸识别"> 人脸识别</a></span>
-		
 		</div>
 	</div>
 	<div class="widget">
 		<span class="widget-title">Recent Posts</span>
 		<div class="widget-content">
 			<ul class="inner-list">
-		    
-		    	<li><a href="/2015-12/readme-of-labeled-faces-in-the-wild-face-database.html">LFW人脸数据库使用规范</a></li>
 		    
 		    	<li><a href="/2015-10/welcome-to-my-blog.html">写在开始的话</a></li>
 		    
