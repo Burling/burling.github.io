@@ -85,6 +85,12 @@
       </li>
       <li><a href="#section-3" id="markdown-toc-section-3">配置版本控制方案</a>        <ul>
           <li><a href="#section-4" id="markdown-toc-section-4">其他版本控制的设定</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#api-reference" id="markdown-toc-api-reference">API Reference</a>    <ul>
+      <li><a href="#acceptheaderversioning" id="markdown-toc-acceptheaderversioning">AcceptHeaderVersioning</a>        <ul>
           <li><a href="#vendor-media-typesaccept-headers" id="markdown-toc-vendor-media-typesaccept-headers">使用带vendor media types的accept headers</a></li>
         </ul>
       </li>
@@ -176,9 +182,11 @@
 
 <span class="k">class</span> <span class="nc">ExampleView</span><span class="p">(</span><span class="n">APIVIew</span><span class="p">):</span>
 	<span class="n">versioning_class</span> <span class="o">=</span> <span class="n">ExampleVersioning</span></code></pre></div>
-<p>#API Reference
-##AcceptHeaderVersioning
-这种方案需要客户端在<code>Accept</code>头的media type中指定版本号，版本号作为media type的参数，补充主要的media type。下面的例子是包含版本号的HTTP请求形式：</p>
+
+<h1 id="api-reference">API Reference</h1>
+
+<h2 id="acceptheaderversioning">AcceptHeaderVersioning</h2>
+<p>这种方案需要客户端在<code>Accept</code>头的media type中指定版本号，版本号作为media type的参数，补充主要的media type。下面的例子是包含版本号的HTTP请求形式：</p>
 
 <div class="highlight"><pre><code class="language-http"><span class="nf">GET</span> <span class="nn">/bookings/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
