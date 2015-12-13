@@ -67,13 +67,40 @@
 	<header class="post-header">
 		<h2 class="post-title">Django REST框架的API版本控制</h2>
 		<p class="post-meta">By  Burling 
-            at Dec 13, 2015 14:29 
+            at Dec 13, 2015 21:28 
             | <a class="post-comments" href="#SOHUCS">Comments(<span id = "sourceId::http://blog.burling.wang/2015-12/api-versioning-of-django-rest-framework" class = "cy_cmt_count" ></span>)</a></p>
     	<script id="cy_cmt_num" src="http://changyan.sohu.com/upload/plugins/plugins.list.count.js?clientId=cys1VxeJ4"></script>
 	</header>
 
 	<article class="post-content">
-	<h1 id="section">版本控制</h1>
+	<h1 id="section">目录</h1>
+<ul id="markdown-toc">
+  <li><a href="#section" id="markdown-toc-section">目录</a></li>
+  <li><a href="#section-1" id="markdown-toc-section-1">版本控制</a>    <ul>
+      <li><a href="#django-rest" id="markdown-toc-django-rest">使用Django-REST框架进行版本控制</a>        <ul>
+          <li><a href="#section-2" id="markdown-toc-section-2">基于版本的行为选择</a></li>
+          <li><a href="#urlapi" id="markdown-toc-urlapi">反转URL到版本化的API</a></li>
+          <li><a href="#apihyperlinked-serializers" id="markdown-toc-apihyperlinked-serializers">版本化的API和hyperlinked serializers</a></li>
+        </ul>
+      </li>
+      <li><a href="#section-3" id="markdown-toc-section-3">配置版本控制方案</a>        <ul>
+          <li><a href="#section-4" id="markdown-toc-section-4">其他版本控制的设定</a></li>
+          <li><a href="#vendor-media-typesaccept-headers" id="markdown-toc-vendor-media-typesaccept-headers">使用带vendor media types的accept headers</a></li>
+        </ul>
+      </li>
+      <li><a href="#urlpathversioning" id="markdown-toc-urlpathversioning">URLPathVersioning</a></li>
+      <li><a href="#namesapceversioning" id="markdown-toc-namesapceversioning">NamesapceVersioning</a></li>
+      <li><a href="#hostnameversioning" id="markdown-toc-hostnameversioning">HostNameVersioning</a></li>
+      <li><a href="#queryparameterversioning" id="markdown-toc-queryparameterversioning">QueryParameterVersioning</a></li>
+    </ul>
+  </li>
+  <li><a href="#section-5" id="markdown-toc-section-5">自定义版本控制方案</a>    <ul>
+      <li><a href="#section-6" id="markdown-toc-section-6">例子</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="section-1">版本控制</h1>
 <p>API版本控制允许你在不同的客户端之间修改接口，REST框架提供了多个不同的版本控制方案。</p>
 
 <p>版本控制是由客户端请求决定的，可以是基于URL请求，也可以是基于请求的header。</p>
@@ -83,20 +110,20 @@
 <h2 id="django-rest">使用Django-REST框架进行版本控制</h2>
 <p>当启用了API版本控制，<code>request.version</code>属性将会以字符串的形式响应给客户端请求；但是默认的版本控制是不启用的，而<code>request.version</code>则会返回<code>None</code>。</p>
 
-<h3 id="section-1">基于版本的行为选择</h3>
+<h3 id="section-2">基于版本的行为选择</h3>
 <p>如何改变API的行为可以由你自己决定，最普遍的方法就是你根据版本将请求切换到对应的序列化行为上，例如：</p>
 
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_serializer_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-	<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="s">&#39;v1&#39;</span><span class="p">:</span>
-		<span class="k">return</span> <span class="n">AccountSerializerVersion1</span>
-	<span class="k">return</span> <span class="n">AccountSerializer</span></code></pre></div>
+<div class="highlight"><pre><code class="language-python"><span class="k">def</span> <span class="nf">get_serializer_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="s">&#39;v1&#39;</span><span class="p">:</span>
+	<span class="k">return</span> <span class="n">AccountSerializerVersion1</span>
+<span class="k">return</span> <span class="n">AccountSerializer</span></code></pre></div>
 
 <h3 id="urlapi">反转URL到版本化的API</h3>
 <p>Django-REST框架的版本化方案包括了<code>reverse</code>函数，你需要以当前的<code>request</code>作为变量：</p>
 
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">rest_framework.reverse</span> <span class="kn">import</span> <span class="n">reverse</span>
+<div class="highlight"><pre><code class="language-python"><span class="kn">from</span> <span class="nn">rest_framework.reverse</span> <span class="kn">import</span> <span class="n">reverse</span>
 
-	<span class="n">reverse</span><span class="p">(</span><span class="s">&#39;bookings-list&#39;</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span></code></pre></div>
+<span class="n">reverse</span><span class="p">(</span><span class="s">&#39;bookings-list&#39;</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span></code></pre></div>
 
 <p>以上函数将会把所有的URL转到合适的api版本，比如：</p>
 
@@ -108,28 +135,150 @@
 <h3 id="apihyperlinked-serializers">版本化的API和hyperlinked serializers</h3>
 <p>当使用hyperlinked serialization方式和基于URL的版本化方案，请将<code>request</code>作为<code>context</code>引用到序列器中：</p>
 
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-		<span class="n">queryset</span> <span class="o">=</span> <span class="n">Booking</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-		<span class="n">serializer</span> <span class="o">=</span> <span class="n">BookingsSerializer</span><span class="p">(</span><span class="n">queryset</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;request&#39;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
-		<span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s">&#39;all_bookings&#39;</span><span class="p">:</span> <span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">})</span></code></pre></div>
+<div class="highlight"><pre><code class="language-python"><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+	<span class="n">queryset</span> <span class="o">=</span> <span class="n">Booking</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="n">serializer</span> <span class="o">=</span> <span class="n">BookingsSerializer</span><span class="p">(</span><span class="n">queryset</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;request&#39;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
+	<span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s">&#39;all_bookings&#39;</span><span class="p">:</span> <span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">})</span></code></pre></div>
 
 <p>这样就能允许所有返回的URL包含版本控制。</p>
 
-<h2 id="section-2">配置版本控制方案</h2>
+<h2 id="section-3">配置版本控制方案</h2>
 <p>版本控制方案是由settings.py中的<code>DEFAULT_VERSIONING_CLASS</code>定义的:</p>
 
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">REST_FRAMEWORK</span> <span class="o">=</span> <span class="p">{</span>
-		<span class="s">&#39;DEFAULT_VERSIONING_CLASS&#39;</span><span class="p">:</span> <span class="s">&#39;rest_framework.versioning.NamespaceVersioning&#39;</span>
-	<span class="p">}</span></code></pre></div>
+<div class="highlight"><pre><code class="language-python"><span class="n">REST_FRAMEWORK</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="s">&#39;DEFAULT_VERSIONING_CLASS&#39;</span><span class="p">:</span> <span class="s">&#39;rest_framework.versioning.NamespaceVersioning&#39;</span>
+<span class="p">}</span></code></pre></div>
 
 <p>除非特别指定，否则<code>DEFAULT_VERSIONING_CLASS</code>默认是<code>None</code>，那么<code>request.version</code>属性将会返回<code>None</code>。</p>
 
 <p>你也可以在一个特定的view中设定版本控制方案，一般你不需要这么做，因为单独为一个view指定版本控制方案意义不大。但是如果你确实需要，请在view中设置<code>versioning_class</code>属性：</p>
 
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">ProfileList</span><span class="p">(</span><span class="n">APIView</span><span class="p">):</span>
-		<span class="n">versioning_class</span> <span class="o">=</span> <span class="n">versioning</span><span class="o">.</span><span class="n">QueryParameterVersioning</span></code></pre></div>
+<div class="highlight"><pre><code class="language-python"><span class="k">class</span> <span class="nc">ProfileList</span><span class="p">(</span><span class="n">APIView</span><span class="p">):</span>
+	<span class="n">versioning_class</span> <span class="o">=</span> <span class="n">versioning</span><span class="o">.</span><span class="n">QueryParameterVersioning</span></code></pre></div>
 
-<h3 id="section-3">其他版本控制的设定</h3>
+<h3 id="section-4">其他版本控制的设定</h3>
+<p>以下的key可以用于设置版本控制：</p>
+
+<ul>
+  <li><code>DEFAULT_VERSION</code>，该值将用于<code>request.version</code>的返回，当版本信息没有被给出的时候。默认值是<code>None</code>；</li>
+  <li><code>ALLOWED_VERSIONS</code>，该值用于限定访问的版本，如果访问版本不在该集合中，将会抛出错误。需要注意的是，<code>DEFAULT_VERSION</code>的值将会默认被当成<code>ALLOWED_VERSIONS</code>的一部分。</li>
+  <li><code>VERSION_PARAM</code>，用于所有版本控制的参数，可以是在media type中或者是URL查询参数中，默认是<code>'version'</code>。
+你也可以通过定义自己的版本控制方案，通过定义这三个参数，并赋给一个view或者viewset。比如，如果你用的是<code>URLPathVersioning</code>：</li>
+</ul>
+
+<div class="highlight"><pre><code class="language-python"><span class="kn">from</span> <span class="nn">rest_framework.versioning</span> <span class="kn">import</span> <span class="n">URLPathVersioning</span>
+<span class="kn">from</span> <span class="nn">rest_framework.views</span> <span class="kn">import</span> <span class="n">APIView</span>
+
+<span class="k">class</span> <span class="nc">ExampleVersioning</span><span class="p">(</span><span class="n">URLPathVersioning</span><span class="p">):</span>
+	<span class="n">default_version</span> <span class="o">=</span> <span class="o">...</span>
+	<span class="n">allowed_versions</span> <span class="o">=</span> <span class="o">...</span>
+	<span class="n">version_param</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">ExampleView</span><span class="p">(</span><span class="n">APIVIew</span><span class="p">):</span>
+	<span class="n">versioning_class</span> <span class="o">=</span> <span class="n">ExampleVersioning</span></code></pre></div>
+<p>#API Reference
+##AcceptHeaderVersioning
+这种方案需要客户端在<code>Accept</code>头的media type中指定版本号，版本号作为media type的参数，补充主要的media type。下面的例子是包含版本号的HTTP请求形式：</p>
+
+<div class="highlight"><pre><code class="language-http"><span class="nf">GET</span> <span class="nn">/bookings/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json; version=1.0</span></code></pre></div>
+<p>上面的示例请求中，<code>request.version</code>属性将会返回字符串<code>'1.0'</code>。
+基于accept headers的版本控制被<a href="http://blog.steveklabnik.com/posts/2011-07-03-nobody-understands-rest-or-http#i_want_my_api_to_be_versioned">公认</a>是<a href="https://github.com/interagent/http-api-design#version-with-accepts-header">最佳实践</a>，但是其他的方式对于你的客户端需求来说或许是更好的。</p>
+
+<h3 id="vendor-media-typesaccept-headers">使用带vendor media types的accept headers</h3>
+<p>严格来讲，<code>json</code>这种媒体类型并没有被指定为<a href="http://tools.ietf.org/html/rfc4627#section-6">附加参数</a>，如果你要构建一个好的公共API你应该考虑使用一种<a href="http://en.wikipedia.org/wiki/Internet_media_type#Vendor_tree">vendor media type</a>。因此，请用自定义media type配置你的基于JSON的渲染器：</p>
+
+<div class="highlight"><pre><code class="language-python"><span class="k">class</span> <span class="nc">BookingsAPIRenderer</span><span class="p">(</span><span class="n">JSONRenderer</span><span class="p">):</span>
+	<span class="n">media_type</span> <span class="o">=</span> <span class="s">&#39;application/vnd.megacorp.bookings+json&#39;</span></code></pre></div>
+
+<p>这样你的客户端请求将会是这样的：</p>
+
+<div class="highlight"><pre><code class="language-http"><span class="nf">GET</span> <span class="nn">/bookings/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/vnd.megacorp.bookings+json; version=1.0</span></code></pre></div>
+
+<h2 id="urlpathversioning">URLPathVersioning</h2>
+<p>这种方案需要客户端在URL路径中指定版本号。</p>
+
+<div class="highlight"><pre><code class="language-http"><span class="nf">GET</span> <span class="nn">/v1/bookings/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json</span></code></pre></div>
+
+<p>那么你的URL配置必须以关键字<code>version</code>匹配版本号，这样，版本信息才能被版本管理方案获取：</p>
+
+<div class="highlight"><pre><code class="language-python"><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+	<span class="n">url</span><span class="p">(</span>
+		<span class="s">r&#39;^(?P&lt;version&gt;[v1|v2]+)/bookings/$&#39;</span><span class="p">,</span>
+		<span class="n">bookings_list</span><span class="p">,</span>
+		<span class="n">name</span><span class="o">=</span><span class="s">&#39;bookings-list&#39;</span>
+	<span class="p">),</span>
+	<span class="n">url</span><span class="p">(</span>
+		<span class="s">r&#39;^(?P&lt;version&gt;[v1|v2]+)/bookings/(?P&lt;pk&gt;[0-9]+)/$&#39;</span><span class="p">,</span>
+		<span class="n">bookings_detail</span><span class="p">,</span>
+		<span class="n">name</span><span class="o">=</span><span class="s">&#39;bookings-detail&#39;</span>
+	<span class="p">)</span>
+<span class="p">]</span></code></pre></div>
+
+<h2 id="namesapceversioning">NamesapceVersioning</h2>
+<p>对于客户端来说，这种方式跟<code>URLParameterVersioning</code>是几乎一样的，唯一的差别在于它是如何在你的Django应用中配置的，因为它使用URL命名空间代替了URL的关键词参数。</p>
+
+<div class="highlight"><pre><code class="language-http"><span class="nf">GET</span> <span class="nn">/v1/something/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json</span></code></pre></div>
+
+<p>在这种方案中，<code>request.version</code>属性是基于<code>namespace</code>被定义的，用来匹配请求路径。下面的例子中我们给出了几个view的可能的两种URL前置，每个都是在不同的命名空间下。</p>
+
+<div class="highlight"><pre><code class="language-python"><span class="c"># bookings/urls.py</span>
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^$&#39;</span><span class="p">,</span> <span class="n">bookings_list</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;bookings-list&#39;</span><span class="p">),</span>
+    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^(?P&lt;pk&gt;[0-9]+)/$&#39;</span><span class="p">,</span> <span class="n">bookings_detail</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;bookings-detail&#39;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="c"># urls.py</span>
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^v1/bookings/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;bookings.urls&#39;</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s">&#39;v1&#39;</span><span class="p">)),</span>
+    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^v2/bookings/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;bookings.urls&#39;</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s">&#39;v2&#39;</span><span class="p">))</span>
+<span class="p">]</span></code></pre></div>
+
+<p><code>URLParameterVersioning</code>和<code>NamespaceVersioning</code>都是合理的，如果你只是需要一个简单的版本控制方案，<code>URLParameterVersioning</code>可能更适合于小型的项目，而<code>NamespaceVersioning</code>则更适合管理中大型项目。</p>
+
+<h2 id="hostnameversioning">HostNameVersioning</h2>
+<p>域名版本控制方案需要客户端在URL的主机名中指定版本号。例如，下面对于<code>http://v1.example.com/bookings/</code>的URL请求：</p>
+
+<div class="highlight"><pre><code class="language-http"><span class="nf">GET</span> <span class="nn">/bookings/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">v1.example.com</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json</span></code></pre></div>
+
+<p>默认情况下，这种方式需要主机名能够匹配下面这个正则表达式：</p>
+
+<div class="highlight"><pre><code>^([a-zA-Z0-9]+)\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+$
+</code></pre></div>
+
+<p>需要注意的是，第一个组合是被包括在括号内的，表明这是主机名的一部分。</p>
+
+<p><code>HostNameVersioning</code>方案可以勉强用于debug模式下，你一般用诸如<code>127.0.0.1</code>之类的IP地址直接访问的情况下。在比如你有很多在线的服务，而你想<a href="https://reinteractive.net/posts/199-developing-and-testing-rails-applications-with-subdomains">以子域名的方式访问本地的服务</a>的情况下，可能会有帮助。</p>
+
+<p>如果你需要把请求路由到不同的服务器时，基于域名的版本控制就显得很方便，因为你只需要为不同API版本配置不同的DNS记录就行了，非常方便。</p>
+
+<h2 id="queryparameterversioning">QueryParameterVersioning</h2>
+<p>这种方案只需要你把版本号当成一个查询参数，添加在URL后面就行了，例如：</p>
+
+<div class="highlight"><pre><code class="language-http"><span class="nf">GET</span> <span class="nn">/something/?version=0.1</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json</span></code></pre></div>
+
+<h1 id="section-5">自定义版本控制方案</h1>
+<p>要实现自定义版本控制方案，需要继承<code>BaseVersioning</code>并且重写<code>.determine_version</code>方法。</p>
+
+<h2 id="section-6">例子</h2>
+<p>下面的例子就是使用了自定义的<code>X-API-Version</code>头来决定被访问的版本。</p>
+
+<div class="highlight"><pre><code class="language-python"><span class="k">class</span> <span class="nc">XAPIVersionScheme</span><span class="p">(</span><span class="n">versioning</span><span class="o">.</span><span class="n">BaseVersioning</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">determine_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;HTTP_X_API_VERSION&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span></code></pre></div>
+
+<p>如果你的版本控制方案是基于请求的URL，那么你可能需要修改URL是如何被指定版本的，那么你就需要修改<code>.reverse()</code>方法，具体的例子你可以查阅源码。</p>
 
 <blockquote>
   <p>原文链接：<a href="http://www.django-rest-framework.org/api-guide/versioning/">http://www.django-rest-framework.org/api-guide/versioning/</a></p>
