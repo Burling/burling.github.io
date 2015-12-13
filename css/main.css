@@ -106,7 +106,8 @@ code {
 
 code {
   padding: 1px 5px;
-  white-space: pre-wrap; }
+  white-space: pre-wrap;
+  tab-size: 4; }
   @media screen and (max-width: 600px) {
     code {
       padding: 0 5px;
