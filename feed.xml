@@ -6,9 +6,84 @@
 </description>
     <link>http://blog.burling.wang/</link>
     <atom:link href="http://blog.burling.wang/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 04 Dec 2015 10:17:04 +0000</pubDate>
-    <lastBuildDate>Fri, 04 Dec 2015 10:17:04 +0000</lastBuildDate>
+    <pubDate>Sun, 13 Dec 2015 07:42:28 +0000</pubDate>
+    <lastBuildDate>Sun, 13 Dec 2015 07:42:28 +0000</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Django REST框架的API版本控制</title>
+        <description>&lt;h1 id=&quot;section&quot;&gt;版本控制&lt;/h1&gt;
+&lt;p&gt;API版本控制允许你在不同的客户端之间修改接口，REST框架提供了多个不同的版本控制方案。&lt;/p&gt;
+
+&lt;p&gt;版本控制是由客户端请求决定的，可以是基于URL请求，也可以是基于请求的header。&lt;/p&gt;
+
+&lt;p&gt;还有很多其他的版本控制方式，比如这篇文章&lt;a href=&quot;http://www.infoq.com/articles/roy-fielding-on-versioning&quot;&gt;《Non-versioned systems can also be appropriate》&lt;/a&gt;提供的方案尤其适合对老系统进行改造。&lt;/p&gt;
+
+&lt;h2 id=&quot;django-rest&quot;&gt;使用Django-REST框架进行版本控制&lt;/h2&gt;
+&lt;p&gt;当启用了API版本控制，&lt;code&gt;request.version&lt;/code&gt;属性将会以字符串的形式响应给客户端请求；但是默认的版本控制是不启用的，而&lt;code&gt;request.version&lt;/code&gt;则会返回&lt;code&gt;None&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;基于版本的行为选择&lt;/h3&gt;
+&lt;p&gt;如何改变API的行为可以由你自己决定，最普遍的方法就是你根据版本将请求切换到对应的序列化行为上，例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_serializer_class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;version&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;v1&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AccountSerializerVersion1&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AccountSerializer&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;urlapi&quot;&gt;反转URL到版本化的API&lt;/h3&gt;
+&lt;p&gt;Django-REST框架的版本化方案包括了&lt;code&gt;reverse&lt;/code&gt;函数，你需要以当前的&lt;code&gt;request&lt;/code&gt;作为变量：&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;rest_framework.reverse&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reverse&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;reverse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;bookings-list&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;以上函数将会把所有的URL转到合适的api版本，比如：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果&lt;code&gt;NamespacedVersioning&lt;/code&gt;被启用了，并且API版本是’v1’，那么URL查找模式就会是&lt;code&gt;&#39;v1:bookings-list&#39;&lt;/code&gt;，就会被定向到比如&lt;code&gt;http://example.org/v1/bookings/&lt;/code&gt;。&lt;/li&gt;
+  &lt;li&gt;如果&lt;code&gt;QueryParameterVersioning&lt;/code&gt;被启用了，并且API版本是&lt;code&gt;1.0&lt;/code&gt;，那么返回的URL将会是这种形式&lt;code&gt;http://example.org/bookings/?version=1.0&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;apihyperlinked-serializers&quot;&gt;版本化的API和hyperlinked serializers&lt;/h3&gt;
+&lt;p&gt;当使用hyperlinked serialization方式和基于URL的版本化方案，请将&lt;code&gt;request&lt;/code&gt;作为&lt;code&gt;context&lt;/code&gt;引用到序列器中：&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;queryset&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Booking&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;serializer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BookingsSerializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;queryset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;many&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;request&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;all_bookings&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;serializer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;这样就能允许所有返回的URL包含版本控制。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;配置版本控制方案&lt;/h2&gt;
+&lt;p&gt;版本控制方案是由settings.py中的&lt;code&gt;DEFAULT_VERSIONING_CLASS&lt;/code&gt;定义的:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;REST_FRAMEWORK&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;s&quot;&gt;&amp;#39;DEFAULT_VERSIONING_CLASS&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;rest_framework.versioning.NamespaceVersioning&amp;#39;&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;除非特别指定，否则&lt;code&gt;DEFAULT_VERSIONING_CLASS&lt;/code&gt;默认是&lt;code&gt;None&lt;/code&gt;，那么&lt;code&gt;request.version&lt;/code&gt;属性将会返回&lt;code&gt;None&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;你也可以在一个特定的view中设定版本控制方案，一般你不需要这么做，因为单独为一个view指定版本控制方案意义不大。但是如果你确实需要，请在view中设置&lt;code&gt;versioning_class&lt;/code&gt;属性：&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ProfileList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;APIView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;versioning_class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;versioning&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;QueryParameterVersioning&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;其他版本控制的设定&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;原文链接：&lt;a href=&quot;http://www.django-rest-framework.org/api-guide/versioning/&quot;&gt;http://www.django-rest-framework.org/api-guide/versioning/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Sun, 13 Dec 2015 14:29:01 +0000</pubDate>
+        <link>http://blog.burling.wang/2015-12/api-versioning-of-django-rest-framework.html</link>
+        <guid isPermaLink="true">http://blog.burling.wang/2015-12/api-versioning-of-django-rest-framework.html</guid>
+        
+        <category>django-rest-framework</category>
+        
+        <category>webservice</category>
+        
+        
+      </item>
     
       <item>
         <title>写在开始的话</title>
