@@ -107,8 +107,7 @@ code {
 code {
   padding: 1px 5px;
   white-space: pre-wrap;
-  tab-size: 4;
-  color: #dd1144; }
+  tab-size: 4; }
   @media screen and (max-width: 600px) {
     code {
       padding: 0 5px;
@@ -118,7 +117,6 @@ pre {
   background-color: #fdfdfd;
   padding: 8px 12px; }
   pre > code {
-    color: #111;
     background-color: #fdfdfd;
     border: 0;
     padding-right: 0;
